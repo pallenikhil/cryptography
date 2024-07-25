@@ -1,0 +1,22 @@
+import numpy as np
+
+def hill_cipher_encrypt(plaintext, key_matrix):
+    plaintext = plaintext.replace(" ", "").upper()
+    if len(plaintext) % 2 != 0:
+        plaintext += 'X'
+
+    plaintext_vector = [ord(char) - ord('A') for char in plaintext]
+    ciphertext = ""
+
+    for i in range(0, len(plaintext_vector), 2):
+        vector = np.array(plaintext_vector[i:i+2]).reshape(2, 1)
+        encrypted_vector = np.dot(key_matrix, vector) % 26
+        ciphertext += chr(encrypted_vector[0][0] + ord('A'))
+        ciphertext += chr(encrypted_vector[1][0] + ord('A'))
+    
+    return ciphertext
+
+key_matrix = np.array([[9, 4], [5, 7]])
+plaintext = "meet me at the usual place at ten rather than eight oclock"
+ciphertext = hill_cipher_encrypt(plaintext, key_matrix)
+print(f"Ciphertext: {ciphertext}")
